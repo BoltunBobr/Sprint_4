@@ -11,13 +11,14 @@ import org.openqa.selenium.firefox.FirefoxDriver;
 import ru.praktikum.yandex.MainPage;
 import ru.praktikum.yandex.OrderPage;
 
+
 import static org.hamcrest.core.StringContains.containsString;
+import static ru.praktikum.yandex.MainPage.QA_SCOOTER_URL;
 
 @RunWith(Parameterized.class)
 public class OrderPageTest {
     private WebDriver driver;
 
-    private final String pageUrl = "https://qa-scooter.praktikum-services.ru/";
 
     private final String name;
     private final String surname;
@@ -42,12 +43,35 @@ public class OrderPageTest {
         this.comment = comment;
     }
 
-    @Parameterized.Parameters
-    public static Object[][] testDataForOrder() {
-        return new Object[][]{
-        {"Дмитрий", "Ларчук", "Полтавская 15 квартира 63", "Сокольники", "89153151515", "15.05.2025", "семеро суток", "чёрный жемчуг", "За час позвонить"},
-        {"Даниил", "Тимошенко", "Корнеева 87-3", "Красные Ворота", "+79101001010", "26.06.2025", "трое суток", "серая безысходность", "С хорошими тормозами"},
+    // Константы с тестовыми данными
+    private static final Object[][] ORDER_TEST_DATA = {
+            {
+                    "Дмитрий",
+                    "Ларчук",
+                    "Полтавская 15 квартира 63",
+                    "Сокольники",
+                    "89153151515",
+                    "15.05.2025",
+                    "семеро суток",
+                    "чёрный жемчуг",
+                    "За час позвонить"
+            },
+            {
+                    "Даниил",
+                    "Тимошенко",
+                    "Корнеева 87-3",
+                    "Красные Ворота",
+                    "+79101001010",
+                    "26.06.2025",
+                    "трое суток",
+                    "серая безысходность",
+                    "С хорошими тормозами"
+            }
     };
+
+    @Parameterized.Parameters(name = "Тестовые данные: {0} {1}")
+    public static Object[][] testDataForOrder() {
+        return ORDER_TEST_DATA;
     }
 
     @Before
@@ -55,26 +79,8 @@ public class OrderPageTest {
         WebDriverManager.chromedriver().setup();
         //driver = new ChromeDriver();
         driver = new FirefoxDriver();
-        driver.get(pageUrl);
-    }
-
-private void makeOrder(OrderPage orderPage) {
-    orderPage.waitForLoadOrderPage();
-
-    orderPage.setNameInput(this.name);
-    orderPage.setSurnameInput(this.surname);
-    orderPage.setAddressInput(this.address);
-    orderPage.setMetroInput(this.metro);
-    orderPage.setPhoneInput(this.phone);
-
-    orderPage.clickButtonOnward();
-
-    orderPage.setDateInput(this.date);
-    orderPage.setTermInput(this.term);
-    orderPage.setColorInput(this.color);
-    orderPage.setCommentInput(this.comment);
-
-    orderPage.completeOrder();
+        driver.manage().window().maximize();
+        driver.get(QA_SCOOTER_URL);
     }
 
     @Test
@@ -84,7 +90,7 @@ private void makeOrder(OrderPage orderPage) {
 
         mainPage.clickOnCookieButton();
         mainPage.clickOrderButtonHeader();
-        makeOrder(orderPage);
+        orderPage.makeOrder(this.name,this.surname,this.address,this.metro,this.phone,this.date,this.term,this.color,this.comment);
 
         MatcherAssert.assertThat("Ошибка в создании нового заказа", orderPage.getOrderSuccessMessage(), containsString(textSuccessOrder));
     }
@@ -96,17 +102,15 @@ private void makeOrder(OrderPage orderPage) {
 
         mainPage.clickOnCookieButton();
         mainPage.clickOrderButtonBody();
-        makeOrder(orderPage);
+        orderPage.makeOrder(this.name,this.surname,this.address,this.metro,this.phone,this.date,this.term,this.color,this.comment);
 
         MatcherAssert.assertThat("Ошибка в создании нового заказа", orderPage.getOrderSuccessMessage(), containsString(textSuccessOrder));
     }
 
-
-
-
-
     @After
     public void tearDown() {
-        driver.quit();
+        if (driver != null) {
+            driver.quit();
+        }
     }
 }

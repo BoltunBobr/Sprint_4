@@ -10,10 +10,13 @@ import java.time.Duration;
 public class MainPage {
     private WebDriver driver;
 
+    //Константа с URL адресом сервиса
+    public static final String QA_SCOOTER_URL = "https://qa-scooter.praktikum-services.ru/";
+
     //Кнопка оформления заказа в шапке
     private final By headerOrderButton = By.xpath(".//button[@class='Button_Button__ra12g' and text()='Заказать']");
     //Кнопка оформления заказа в теле страницы
-    private final By bodyOrderButton = By.className("Button_Middle__1CSJM");
+    private final By bodyOrderButton = By.xpath(".//button[contains (@class, 'Button_UltraBig__UU3Lp') and text()='Заказать']");
     //Заголовок раскрывающегося блока с вопросами
     private final By accordionHeader = By.className("accordion__button");
     //Панель раскрывающегося блока

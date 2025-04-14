@@ -89,7 +89,7 @@ public class OrderPage {
 
     //Метод ожидания загрузки элемента
     private void waitForElementLoad(By elementToLoad) {
-        new WebDriverWait(driver, Duration.ofSeconds(5))
+        new WebDriverWait(driver, Duration.ofSeconds(10))
                 .until(ExpectedConditions.visibilityOf(driver.findElement(elementToLoad)));
     }
 
@@ -179,4 +179,25 @@ public class OrderPage {
     public String getOrderSuccessMessage() {
         return driver.findElement(successOrderMessage).getText();
     }
+
+    //Метод создания заказа
+    public void makeOrder(String name, String surname, String address, String metro, String phone, String date, String term, String color, String comment) {
+        waitForLoadOrderPage();
+
+        setNameInput(name);
+        setSurnameInput(surname);
+        setAddressInput(address);
+        setMetroInput(metro);
+        setPhoneInput(phone);
+
+        clickButtonOnward();
+
+        setDateInput(date);
+        setTermInput(term);
+        setColorInput(color);
+        setCommentInput(comment);
+
+        completeOrder();
+    }
 }
+
