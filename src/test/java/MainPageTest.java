@@ -50,6 +50,7 @@ public class MainPageTest {
         WebDriverManager.chromedriver().setup();
         //driver = new ChromeDriver();
         driver = new FirefoxDriver();
+        driver.manage().window().maximize();
         driver.get(QA_SCOOTER_URL);
     }
 
